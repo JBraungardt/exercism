@@ -33,6 +33,22 @@ defmodule PigLatin do
       String.match?(word, ~r/^[^aeiou]qu/) -> String.slice(word, 3..-1) <> String.first(word) <> "quay"
       true                                 -> String.slice(word, 1..-1) <> String.first(word) <> "ay"
     end
-
   end
+
+
+  # @spec translate(phrase :: String.t()) :: String.t()
+  # def translate(phrase) do
+  #   phrase
+  #   |> String.split()
+  #   |> Enum.map(&translate_word/1)
+  #   |> Enum.join(" ")
+  # end
+  #
+  # for vowel <- ~w(xr yt a e i o u) do
+  #   defp translate_word(unquote(vowel) <> str), do: unquote(vowel) <> str <> "ay"
+  # end
+  #
+  # for consonant <- ~w(squ thr sch ch qu th b c d f g h j k l m n p q r s t v w x y z) do
+  #   defp translate_word(unquote(consonant) <> str), do: str <> unquote(consonant) <> "ay"
+  # end
 end
