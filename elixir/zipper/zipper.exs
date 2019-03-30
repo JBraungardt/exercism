@@ -59,26 +59,20 @@ defmodule Zipper do
   Get the left child of the focus node, if any.
   """
   @spec left(Z.t()) :: Z.t() | nil
-  def left(%Zipper{node: node, trail: trail} = z) do
-    new_node = node.left
+  def left(%Zipper{node: %BinTree{left: nil}}), do: nil
 
-    case new_node do
-      nil -> nil
-      _ -> %Zipper{z | node: new_node, trail: [{:left, node} | trail]}
-    end
+  def left(%Zipper{node: %BinTree{left: next_node} = current_node, trail: trail} = z) do
+    %Zipper{z | node: next_node, trail: [{:left, current_node} | trail]}
   end
 
   @doc """
   Get the right child of the focus node, if any.
   """
   @spec right(Z.t()) :: Z.t() | nil
-  def right(%Zipper{node: node, trail: trail} = z) do
-    new_node = node.right
+  def right(%Zipper{node: %BinTree{right: nil}}), do: nil
 
-    case new_node do
-      nil -> nil
-      _ -> %Zipper{z | node: new_node, trail: [{:right, node} | trail]}
-    end
+  def right(%Zipper{node: %BinTree{right: next_node} = current_node, trail: trail} = z) do
+    %Zipper{z | node: next_node, trail: [{:right, current_node} | trail]}
   end
 
   @doc """
@@ -129,15 +123,12 @@ defmodule Zipper do
   end
 
   defp update_tree(%Zipper{trail: []}, n), do: n
-  defp update_tree(%Zipper{trail: trail} = z, n) do
-    [{direction, node} | _t] = trail
 
-    new_node =
-      case direction do
-        :left -> %BinTree{node | left: n}
-        :right -> %BinTree{node | right: n}
-      end
+  defp update_tree(%Zipper{trail: [{:left, node} | _]} = z, n) do
+    update_tree(z |> up(), %BinTree{node | left: n})
+  end
 
-    update_tree(z |> up(), new_node)
+  defp update_tree(%Zipper{trail: [{:right, node} | _]} = z, n) do
+    update_tree(z |> up(), %BinTree{node | right: n})
   end
 end
